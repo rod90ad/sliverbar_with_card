@@ -1,4 +1,5 @@
 # Card Sliver App Bar
+[![Pub](https://img.shields.io/pub/v/sliverbar_with_card.svg)](https://pub.dev/packages/sliverbar_with_card)
 [![Pull Requests are welcome](https://img.shields.io/badge/license-MIT-blue)](https://github.com/marianocordoba/fab-circular-menu/blob/master/LICENSE)
 [![Pull Requests are welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com/marianocordoba/fab-circular-menu/pulls)
 [![Codemagic build status](https://api.codemagic.io/apps/5e20bb3cc5faa6225933281d/5e20bb3cc5faa6225933281c/status_badge.svg)](https://codemagic.io/apps/5e20bb3cc5faa6225933281d/5e20bb3cc5faa6225933281c/latest_build)
