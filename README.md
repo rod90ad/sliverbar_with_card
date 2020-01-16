@@ -1,7 +1,7 @@
 # Card Sliver App Bar
 [![Pub](https://img.shields.io/pub/v/sliverbar_with_card.svg)](https://pub.dev/packages/sliverbar_with_card)
-[![Pull Requests are welcome](https://img.shields.io/badge/license-MIT-blue)](https://github.com/marianocordoba/fab-circular-menu/blob/master/LICENSE)
-[![Pull Requests are welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com/marianocordoba/fab-circular-menu/pulls)
+[![Pull Requests are welcome](https://img.shields.io/badge/license-MIT-blue)](https://github.com/rod90ad/sliverbar_with_card/blob/master/LICENSE)
+[![Pull Requests are welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com/rod90ad/sliverbar_with_card/pulls)
 [![Codemagic build status](https://api.codemagic.io/apps/5e20bb3cc5faa6225933281d/5e20bb3cc5faa6225933281c/status_badge.svg)](https://codemagic.io/apps/5e20bb3cc5faa6225933281d/5e20bb3cc5faa6225933281c/latest_build)
 
 A Flutter package to create a SliverAppBar with a Card.
@@ -62,10 +62,10 @@ MaterialApp(
 
 | Property | Type | Description | Default |
 |----------|------|-------------|---------|
-| <font color="ff0000">`required`</font> height | Double | The height of background image | -
-| <font color="ff0000">`required`</font> background | Image | The image of background | -
-| <font color="ff0000">`required`</font> title | Text | The text of title | -
-| <font color="ff0000">`required`</font> body | Widget | The body of this widget | - 
+| `required` height | Double | The height of background image | -
+| `required` background | Image | The image of background | -
+| `required` title | Text | The text of title | -
+| `required` body | Widget | The body of this widget | - 
 | titleDescription | Text | The short description of title | `null`
 | backButton | Boolean | If has backButton | `false`
 | backButtonColors | List<Color> | The colors of backButton when open and closed | `Colors.white`

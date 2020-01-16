@@ -1,8 +1,8 @@
 name: sliverbar_with_card
-description: A Flutter package to create a SliverAppBar with a Card.
+description: A Flutter package to create a SliverAppBar with a Card with action button and back button, excellent to show catalog items.
 author: Rodrigo Dias <rod90ad@gmail.com>
 homepage: https://github.com/rod90ad/sliverbar_with_card
-version: 0.1.1
+version: 0.1.3
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
