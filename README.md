@@ -6,7 +6,7 @@ A Flutter package to create a SliverAppBar with a Card.
 
 Inspired by [FaoB](https://github.com/faob-dev)'s [Twitter Post](https://twitter.com/Fa__oB/status/1057740738140798979) design.
 
-![Showcase](https://i.imgur.com/rj4cNHc.gif)
+![Showcase](https://i.imgur.com/Yjdj1Bw.gif)
 
 ## Getting started
 
