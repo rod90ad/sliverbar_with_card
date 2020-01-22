@@ -2,7 +2,6 @@ library sliverbar_with_card;
 
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:sliverbar_with_card/clips/clip_chanfro.dart';
 
 class CardSliverAppBar extends StatefulWidget {
   final double height;
@@ -242,7 +241,7 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
       key: GlobalKey(),
       top: scale == 0.0 ? offset : widget.height - widget.appBarHeight,
       child: ClipPath(
-        clipper: MyCliperChanfro(animationController.value),
+        clipper: _MyCliperChanfro(animationController.value),
         child: Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.only(
@@ -303,5 +302,34 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
                   ]),
               child: widget.action,
             )));
+  }
+}
+
+class _MyCliperChanfro extends CustomClipper<Path> {
+  double scale;
+
+  _MyCliperChanfro(this.scale);
+
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    scale = 1.0 - scale;
+    if (scale >= 0.5) {
+      path.lineTo(0, 30);
+      path.lineTo(50, 0);
+    } else {
+      path.lineTo(0, (scale / 0.5) * 30);
+      path.lineTo((scale / 0.5) * 50, 0);
+    }
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
   }
 }

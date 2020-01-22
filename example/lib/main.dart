@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sliverbar_with_card/CardSliverAppBar/card_sliver_app_bar.dart';
+import 'package:sliverbar_with_card/card_sliver_app_bar.dart';
 
 void main() => runApp(MyApp());
 
