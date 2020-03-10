@@ -1,3 +1,7 @@
+## 0.1.5
+
+* Improve of performance.
+
 ## 0.1.4
 
 * Fix some issues about analysis.

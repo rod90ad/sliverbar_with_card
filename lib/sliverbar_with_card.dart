@@ -10,7 +10,7 @@ class CardSliverAppBar extends StatefulWidget {
   final Text title;
   final Text titleDescription;
   final bool backButton;
-  final List<Color> backBottonColors;
+  final List<Color> backButtonColors;
   final Widget action;
   final Widget body;
   final ImageProvider card;
@@ -22,7 +22,7 @@ class CardSliverAppBar extends StatefulWidget {
       @required this.body,
       this.titleDescription,
       this.backButton = false,
-      this.backBottonColors,
+      this.backButtonColors,
       this.action,
       this.card,
       Key key})
@@ -38,104 +38,115 @@ class CardSliverAppBar extends StatefulWidget {
 
 class _CardSliverAppBarState extends State<CardSliverAppBar>
     with SingleTickerProviderStateMixin {
-  ScrollController scrollController;
-  AnimationController animationController;
-  Animation<double> fadeTransition;
-  Animatable<Color> animatedBackButtonColors;
-  Animation<double> rotateCard;
+  ScrollController _scrollController;
+  AnimationController _animationController;
+  Animation<double> _fadeTransition;
+  Animatable<Color> _animatedBackButtonColors;
+  Animation<double> _rotateCard;
 
-  double scale = 0.0;
-  double offset = 0.0;
+  double _scale = 0.0;
+  double _offset = 0.0;
 
   @override
   void dispose() {
-    scrollController?.dispose();
-    animationController?.dispose();
+    _scrollController?.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    animationController =
+    _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 200));
 
-    fadeTransition = Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
-        parent: animationController,
+    _fadeTransition = Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
+        parent: _animationController,
         curve: Interval(0.4, 1.0, curve: Curves.easeIn)))
       ..addListener(() {
         setState(() {});
       });
     if (widget.card != null) {
-      rotateCard = Tween(begin: 0.0, end: 0.4).animate(
-          CurvedAnimation(curve: Curves.linear, parent: animationController))
+      _rotateCard = Tween(begin: 0.0, end: 0.4).animate(
+          CurvedAnimation(curve: Curves.linear, parent: _animationController))
         ..addListener(() {
           setState(() {});
         });
     }
-    scrollController = ScrollController();
-    scrollController.addListener(() {
-      setState(() {});
-    });
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {});
+      });
   }
 
-  void _animationController(double scale) {
-    animationController.value = scale;
+  void _animationValue(double scale) {
+    _animationController.value = scale;
   }
+
+  //gets
+  get _backButtonColors => widget.backButtonColors;
+  get _card => widget.card;
+  get _action => widget.action;
+  get _backButton => widget.backButton;
+  get _height => widget.height;
+  get _body => widget.body;
+  get _appBarHeight => widget.appBarHeight;
+  get _background => widget.background;
+  get _titleDescription => widget.titleDescription;
+  get _title => widget.title;
 
   @override
   Widget build(BuildContext context) {
-    if (scrollController.hasClients) {
-      scale = scrollController.offset / (widget.height - widget.appBarHeight);
-      if (scale > 1) {
-        scale = 1.0;
+    if (_scrollController.hasClients) {
+      _scale = _scrollController.offset / (widget.height - widget.appBarHeight);
+      if (_scale > 1) {
+        _scale = 1.0;
       }
-      offset = scrollController.offset;
+      _offset = _scrollController.offset;
     }
-    _animationController(scale);
-    scale = 1.0 - scale;
+    _animationValue(_scale);
+    _scale = 1.0 - _scale;
 
-    if (widget.backBottonColors != null &&
-        widget.backBottonColors.length >= 2) {
-      animatedBackButtonColors = TweenSequence<Color>([
+    if (_backButtonColors != null && _backButtonColors.length >= 2) {
+      _animatedBackButtonColors = TweenSequence<Color>([
         TweenSequenceItem(
             weight: 1.0,
             tween: ColorTween(
-              begin: widget.backBottonColors[0],
-              end: widget.backBottonColors[1],
+              begin: _backButtonColors[0],
+              end: _backButtonColors[1],
             ))
       ]);
     }
 
     List<Widget> stackOrder = List<Widget>();
-    if (scale >= 0.5) {
+    if (_scale >= 0.5) {
       stackOrder.add(_bodyContainer());
       stackOrder.add(_backgroundConstructor());
       stackOrder.add(_shadowConstructor());
       stackOrder.add(_titleConstructor());
-      if (widget.card != null) stackOrder.add(_cardConstructor());
-      if (widget.action != null) stackOrder.add(_actionConstructor());
-      if (widget.backButton != null && widget.backButton)
+      if (_card != null) stackOrder.add(_cardConstructor());
+      if (_action != null) stackOrder.add(_actionConstructor());
+      if (_backButton != null && _backButton)
         stackOrder.add(_backButtonConstructor());
     } else {
       stackOrder.add(_backgroundConstructor());
-      if (widget.card != null) stackOrder.add(_cardConstructor());
+      if (_card != null) stackOrder.add(_cardConstructor());
       stackOrder.add(_bodyContainer());
       stackOrder.add(_shadowConstructor());
       stackOrder.add(_titleConstructor());
-      if (widget.action != null) stackOrder.add(_actionConstructor());
-      if (widget.backButton != null && widget.backButton)
+      if (_action != null) stackOrder.add(_actionConstructor());
+      if (_backButton != null && _backButton)
         stackOrder.add(_backButtonConstructor());
     }
 
     return SafeArea(
       child: Container(
         child: ListView(
-          controller: scrollController,
+          controller: _scrollController,
           primary: false,
           children: <Widget>[
             Stack(
-              key: GlobalKey(),
+              key: Key("widget_stack"),
               children: stackOrder,
             )
           ],
@@ -146,15 +157,15 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
 
   Widget _backButtonConstructor() {
     return Positioned(
-      top: offset + 7,
+      top: _offset + 7,
       left: 5,
       child: Column(
         children: <Widget>[
           IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: animatedBackButtonColors != null
-                ? animatedBackButtonColors
-                    .evaluate(AlwaysStoppedAnimation(animationController.value))
+            icon: const Icon(Icons.arrow_back),
+            color: _animatedBackButtonColors != null
+                ? _animatedBackButtonColors.evaluate(
+                    AlwaysStoppedAnimation(_animationController.value))
                 : Colors.white,
             iconSize: 25,
             onPressed: () {
@@ -168,40 +179,40 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
 
   Widget _bodyContainer() {
     return Container(
-      key: GlobalKey(),
-      margin: EdgeInsets.only(top: widget.height),
-      child: widget.body,
+      key: Key("widget_body"),
+      margin: EdgeInsets.only(top: _height),
+      child: _body,
     );
   }
 
   double _getRotationAnimationValue(double animValue) {
     animValue = animValue * 5;
-    double value = -pow(animValue, 2) + (2 * animValue);
+    final double value = -pow(animValue, 2) + (2 * animValue);
     return value;
   }
 
   double _getCardTopMargin() {
-    double value = scale <= 0.5
-        ? widget.height - ((widget.appBarHeight * 3.6) * scale)
+    final double value = _scale <= 0.5
+        ? widget.height - ((widget.appBarHeight * 3.6) * _scale)
         : widget.height - (widget.appBarHeight * 1.8);
     return value;
   }
 
   Widget _cardConstructor() {
     return Positioned(
-      key: GlobalKey(),
+      key: Key("widget_card"),
       top: _getCardTopMargin(),
       left: 20,
       child: Transform.rotate(
-        angle: _getRotationAnimationValue(rotateCard.value),
+        angle: _getRotationAnimationValue(_rotateCard.value),
         origin: Offset(50, -70),
         child: SizedBox(
-          width: widget.appBarHeight * 1.67,
-          height: widget.appBarHeight * 2.3,
+          width: _appBarHeight * 1.67,
+          height: _appBarHeight * 2.3,
           child: Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                image: DecorationImage(image: widget.card, fit: BoxFit.cover)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                image: DecorationImage(image: _card, fit: BoxFit.cover)),
           ),
         ),
       ),
@@ -210,25 +221,26 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
 
   Widget _backgroundConstructor() {
     return Container(
-      key: GlobalKey(),
-      height: widget.height,
+      key: Key("widget_background"),
+      height: _height,
       width: MediaQuery.of(context).size.width,
       color: Colors.black,
       child: FadeTransition(
-        opacity: fadeTransition,
-        child: widget.background,
+        opacity: _fadeTransition,
+        child: _background,
       ),
     );
   }
 
   Widget _shadowConstructor() {
     return Positioned(
-        key: GlobalKey(),
-        top: scale == 0.0 ? offset + widget.appBarHeight : widget.height,
+        key: Key("widget_appbar_shadow"),
+        top: _scale == 0.0 ? _offset + _appBarHeight : _height,
         child: Container(
             width: MediaQuery.of(context).size.width,
             height: 1,
-            decoration: BoxDecoration(color: Colors.transparent, boxShadow: [
+            decoration:
+                const BoxDecoration(color: Colors.transparent, boxShadow: [
               BoxShadow(
                 color: Colors.black54,
                 blurRadius: 1.0,
@@ -238,19 +250,19 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
 
   Widget _titleConstructor() {
     return Positioned(
-      key: GlobalKey(),
-      top: scale == 0.0 ? offset : widget.height - widget.appBarHeight,
+      key: Key("widget_title"),
+      top: _scale == 0.0 ? _offset : widget.height - widget.appBarHeight,
       child: ClipPath(
-        clipper: _MyCliperChanfro(animationController.value),
+        clipper: _MyCliperChanfro(_animationController.value),
         child: Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.only(
-              left: scale >= 0.12
-                  ? 40 + ((MediaQuery.of(context).size.width / 4) * scale)
+              left: _scale >= 0.12
+                  ? 40 + ((MediaQuery.of(context).size.width / 4) * _scale)
                   : 50),
           width: MediaQuery.of(context).size.width,
           color: Colors.white,
-          height: widget.appBarHeight,
+          height: _appBarHeight,
           child: _titleDescriptionHandler(),
         ),
       ),
@@ -258,19 +270,19 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
   }
 
   Widget _titleDescriptionHandler() {
-    if (widget.titleDescription != null) {
+    if (_titleDescription != null) {
       var titleContainer = Container(
         alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(bottom: (25 * scale)),
-        child: widget.title,
+        padding: EdgeInsets.only(bottom: (25 * _scale)),
+        child: _title,
       );
 
       var titleDescriptionContainer = Opacity(
-        opacity: scale <= 0.7 ? scale / 0.7 : 1.0,
+        opacity: _scale <= 0.7 ? _scale / 0.7 : 1.0,
         child: Container(
           alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(top: (25 * scale)),
-          child: widget.titleDescription,
+          padding: EdgeInsets.only(top: (25 * _scale)),
+          child: _titleDescription,
         ),
       );
 
@@ -282,25 +294,25 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
         ],
       );
     } else {
-      return widget.title;
+      return _title;
     }
   }
 
   Widget _actionConstructor() {
     return Positioned(
-        key: GlobalKey(),
-        top: widget.height - widget.appBarHeight - 25,
+        key: Key("widget_action"),
+        top: _height - _appBarHeight - 25,
         right: 10,
         child: Transform.scale(
-            scale: scale >= 0.5 ? 1.0 : (scale / 0.5),
+            scale: _scale >= 0.5 ? 1.0 : (_scale / 0.5),
             child: Container(
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                  boxShadow: [
+                  borderRadius: const BorderRadius.all(Radius.circular(50)),
+                  boxShadow: const [
                     BoxShadow(color: Colors.black54, blurRadius: 3.0)
                   ]),
-              child: widget.action,
+              child: _action,
             )));
   }
 }
