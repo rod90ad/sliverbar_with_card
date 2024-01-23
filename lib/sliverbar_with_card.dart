@@ -4,28 +4,28 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class CardSliverAppBar extends StatefulWidget {
-  final double height;
-  final Image background;
+  final double? height;
+  final Image? background;
   final double appBarHeight = 60;
-  final Text title;
-  final Text titleDescription;
-  final bool backButton;
-  final List<Color> backButtonColors;
-  final Widget action;
-  final Widget body;
-  final ImageProvider card;
+  final Text? title;
+  final Text? titleDescription;
+  final bool? backButton;
+  final List<Color>? backButtonColors;
+  final Widget? action;
+  final Widget? body;
+  final ImageProvider? card;
 
   CardSliverAppBar(
-      {@required this.height,
-      @required this.background,
-      @required this.title,
-      @required this.body,
+      {required this.height,
+      required this.background,
+      required this.title,
+      required this.body,
       this.titleDescription,
       this.backButton = false,
       this.backButtonColors,
       this.action,
       this.card,
-      Key key})
+      Key? key})
       : assert(height != null && height > 0),
         assert(background != null),
         assert(title != null),
@@ -38,11 +38,11 @@ class CardSliverAppBar extends StatefulWidget {
 
 class _CardSliverAppBarState extends State<CardSliverAppBar>
     with SingleTickerProviderStateMixin {
-  ScrollController _scrollController;
-  AnimationController _animationController;
-  Animation<double> _fadeTransition;
-  Animatable<Color> _animatedBackButtonColors;
-  Animation<double> _rotateCard;
+  ScrollController? _scrollController;
+  AnimationController? _animationController;
+  Animation<double>? _fadeTransition;
+  Animatable<Color?>? _animatedBackButtonColors;
+  Animation<double>? _rotateCard;
 
   double _scale = 0.0;
   double _offset = 0.0;
@@ -61,14 +61,14 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
         AnimationController(vsync: this, duration: Duration(milliseconds: 200));
 
     _fadeTransition = Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
-        parent: _animationController,
+        parent: _animationController!,
         curve: Interval(0.4, 1.0, curve: Curves.easeIn)))
       ..addListener(() {
         setState(() {});
       });
     if (widget.card != null) {
       _rotateCard = Tween(begin: 0.0, end: 0.4).animate(
-          CurvedAnimation(curve: Curves.linear, parent: _animationController))
+          CurvedAnimation(curve: Curves.linear, parent: _animationController!))
         ..addListener(() {
           setState(() {});
         });
@@ -80,7 +80,7 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
   }
 
   void _animationValue(double scale) {
-    _animationController.value = scale;
+    _animationController!.value = scale;
   }
 
   //gets
@@ -97,28 +97,30 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
 
   @override
   Widget build(BuildContext context) {
-    if (_scrollController.hasClients) {
-      _scale = _scrollController.offset / (widget.height - widget.appBarHeight);
+    if (_scrollController!.hasClients) {
+      _scale =
+          _scrollController!.offset / (widget.height! - widget.appBarHeight);
       if (_scale > 1) {
         _scale = 1.0;
       }
-      _offset = _scrollController.offset;
+      _offset = _scrollController!.offset;
     }
     _animationValue(_scale);
     _scale = 1.0 - _scale;
 
     if (_backButtonColors != null && _backButtonColors.length >= 2) {
-      _animatedBackButtonColors = TweenSequence<Color>([
+      _animatedBackButtonColors = TweenSequence<Color?>([
         TweenSequenceItem(
-            weight: 1.0,
-            tween: ColorTween(
-              begin: _backButtonColors[0],
-              end: _backButtonColors[1],
-            ))
+          weight: 1.0,
+          tween: ColorTween(
+            begin: _backButtonColors[0],
+            end: _backButtonColors[1],
+          ),
+        )
       ]);
     }
 
-    List<Widget> stackOrder = List<Widget>();
+    List<Widget> stackOrder = [];
     if (_scale >= 0.5) {
       stackOrder.add(_bodyContainer());
       stackOrder.add(_backgroundConstructor());
@@ -164,8 +166,8 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
           IconButton(
             icon: const Icon(Icons.arrow_back),
             color: _animatedBackButtonColors != null
-                ? _animatedBackButtonColors.evaluate(
-                    AlwaysStoppedAnimation(_animationController.value))
+                ? _animatedBackButtonColors!.evaluate(
+                    AlwaysStoppedAnimation(_animationController!.value))
                 : Colors.white,
             iconSize: 25,
             onPressed: () {
@@ -193,8 +195,8 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
 
   double _getCardTopMargin() {
     final double value = _scale <= 0.5
-        ? widget.height - ((widget.appBarHeight * 3.6) * _scale)
-        : widget.height - (widget.appBarHeight * 1.8);
+        ? widget.height! - ((widget.appBarHeight * 3.6) * _scale)
+        : widget.height! - (widget.appBarHeight * 1.8);
     return value;
   }
 
@@ -204,7 +206,7 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
       top: _getCardTopMargin(),
       left: 20,
       child: Transform.rotate(
-        angle: _getRotationAnimationValue(_rotateCard.value),
+        angle: _getRotationAnimationValue(_rotateCard!.value),
         origin: Offset(50, -70),
         child: SizedBox(
           width: _appBarHeight * 1.67,
@@ -226,7 +228,7 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
       width: MediaQuery.of(context).size.width,
       color: Colors.black,
       child: FadeTransition(
-        opacity: _fadeTransition,
+        opacity: _fadeTransition!,
         child: _background,
       ),
     );
@@ -251,9 +253,9 @@ class _CardSliverAppBarState extends State<CardSliverAppBar>
   Widget _titleConstructor() {
     return Positioned(
       key: Key("widget_title"),
-      top: _scale == 0.0 ? _offset : widget.height - widget.appBarHeight,
+      top: _scale == 0.0 ? _offset : widget.height! - widget.appBarHeight,
       child: ClipPath(
-        clipper: _MyCliperChanfro(_animationController.value),
+        clipper: _MyCliperChanfro(_animationController!.value),
         child: Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.only(
