@@ -1,3 +1,7 @@
+## 0.1.6
+
+* Added null safety
+
 ## 0.1.5
 
 * Improve of performance.
